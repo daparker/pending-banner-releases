@@ -13,7 +13,7 @@ should work:
 $ javac -Xlint:unchecked -cp <path>/ojdbc7.jar PendingBannerReleases.java
 ```
 
-Where <path> is the full path to the ESM webapp's lib directory
+Where `<path>` is the full path to the ESM webapp's lib directory
 (e.g., /u01/apache-tomcat-8.5.20/webapps/admin/WEB-INF/lib).
 
  
