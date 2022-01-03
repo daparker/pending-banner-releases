@@ -4,7 +4,7 @@ This program is designed to show the releases in the Ellucian Solution Manager d
 yet been installed in the specified Banner instances.
 
 
-##COMPILING
+## COMPILING
 In order to compile the PendingBannerReleases.class file, you will need to
 specify the full path to **ojdbc7.jar** as the classpath.  Something like this
 should work: 
@@ -18,13 +18,13 @@ Where <path> is the full path to the ESM webapp's lib directory
 
  
 
-##CONFIGURATION
+## CONFIGURATION
 You can configure the connection details for both the ESM H2 database and Banner
 database in the **config.properties** file.  This file must reside in the same
 directory as the PendingBannerReleases.class file.
 
 
-##RUNNING
+## RUNNING
 If your ESM server is running on Linux, you can simply use the included shell
 script **pending_banner_releases.sh** to run the program, like so:
 
@@ -55,7 +55,7 @@ Where `<path>` is the full path to the ESM webapp's lib directory
 (e.g., /u01/apache-tomcat-8.5.20/webapps/admin/WEB-INF/lib).
 
 
-##NOTES
+## NOTES
 1. If you are using the shell script to run this program, you must first ensure that the values of `h2.db.file` in **config.properites** and ESM_H2_FILE in the pending_banner_releases.sh script are the same.
 2. The script will copy the live H2 database file to the filename specified by ESM_H2_FILE.  So, DO NOT specify the full path of the live file as the value for this variable, or the script will fail.
 3. This program does not currently recognize dependencies, as I was unable to determine exactly how these relationships are stored in the ESM database.  Therefore, the output may show some product versions which are not installed in Banner because they were superseded by a newer release.
