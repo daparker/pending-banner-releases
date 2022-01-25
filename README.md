@@ -3,18 +3,18 @@
 ## About
 This is a small Java program that will show the releases in the Ellucian Solution Manager (ESM) database which have not yet been installed in the specified Banner instances.  It is intended to be compiled and run on the ESM server, as it requires access to the OJDBC driver, H2 driver, and H2 database used by ESM.  You can specity the connection details for up to three separate Banner instances, and this program will show the pending releases which are not yet installed in each instance.  This makes it useful for quickly comparing which releases are installed in different Banner environments.
 
-Please follow the instructions below carefully before running this program for the first time.
+***Please follow the instructions below carefully before running this program for the first time.***
 
 **Note:** This program does not currently recognize dependencies.  Therefore, the output may show some product versions which are not installed in Banner because they were superseded by a newer release.
 
 ## Compiling
-In order to compile the PendingBannerReleases.class file, you will need to specify the full path to **ojdbc7.jar** as the classpath.  Something like this should work: 
+You are welcome to try using the **PendingBannerReleases.class** file provided in this repo, following the instructions under **Running** (below).  If it does not work correctly, you may need to recompile the class file for your own platform and ESM version.  In order to compile the **PendingBannerReleases.class** file, you will need to specify the full path to **ojdbc7.jar** as the classpath.  Something like this should work:
 
 ```
 $ javac -Xlint:unchecked -cp <path>/ojdbc7.jar PendingBannerReleases.java
 ```
 
-Where `<path>` is the full path to the ESM webapp's lib directory (e.g., `/u01/apache-tomcat-8.5.20/webapps/admin/WEB-INF/lib`).
+Where `<path>` is the full path to the ESM application's lib directory (e.g., `/u01/apache-tomcat-8.5.20/webapps/admin/WEB-INF/lib`).
 
 ## Configuring
 You can configure the connection details for both the ESM H2 database and Banner database in the **config.properties** file.  This file must reside in the same directory as the PendingBannerReleases.class file.  In order to allow access to the H2 database used by ESM, you will need the file password, username, and user password which were configured when ESM was first installed.  The configuration properties are described below:
@@ -62,7 +62,7 @@ Assuming you have set **/var/tmp/ESMAdminProdDb.mv.db** as the value of `h2.db.f
 
 ```
 $ cp /u01/adminApp/ESMAdminProdDb.mv.db /var/tmp/ESMAdminProdDb.mv.db
-$ java -cp <path>/h2-1.4.196.jar:<path>/ojdbc7.jar:. PendingBannerReleases
+$ java -cp <path>/*:. PendingBannerReleases
 ```
 
 Where `<path>` is the full path to the ESM webapp's lib directory (e.g., `/u01/apache-tomcat-8.5.20/webapps/admin/WEB-INF/lib`).
