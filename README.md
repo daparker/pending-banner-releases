@@ -1,6 +1,7 @@
 # Pending Banner Releases
 
-This program will show the releases in the Ellucian Solution Manager database which have not yet been installed in the specified Banner instances.
+## About
+This is a small Java program that will show the releases in the Ellucian Solution Manager (ESM) database which have not yet been installed in the specified Banner instances.  It is intended to be compiled and run on the ESM server, as it requires access to the OJDBC driver, H2 driver, and H2 database used by ESM.  You can specity the connection details for up to three separate Banner instances, and this program will show the pending releases which are not yet installed in each instance.  This makes it useful for quickly comparing which releases are installed in different Banner environments.
 
 **Note:** This program does not currently recognize dependencies.  Therefore, the output may show some product versions which are not installed in Banner because they were superseded by a newer release.
 
