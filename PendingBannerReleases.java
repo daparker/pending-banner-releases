@@ -31,6 +31,13 @@
  * - Version 1.3.0.
  * - Added checks for missing config values for Oracle databases.
  * - Added code to handle database connection failures for H2 and Oracle.
+ *
+ * January 24, 2023:
+ * - Version 1.4.0.
+ * - Changed the default Oracle JDBC connection string to the format supported by
+ *   pluggable databases RAC.
+ * - If the first connection attempt to an Oracle database fails, retry with the
+ *   old JDBC connection string format.
  */
 
 import java.lang.*;
@@ -41,7 +48,7 @@ import java.io.*;
 public class PendingBannerReleases {
     // Program info
     static final String PROGRAM = "Pending Banner Releases";
-    static final String VERSION = "1.3.0";
+    static final String VERSION = "1.4.0";
     static final String AUTHOR = "Dave Parker <dparker@utica.edu>";
 
     // The file from which to read the database connection info
@@ -148,7 +155,7 @@ public class PendingBannerReleases {
                 System.exit(1);
             }
             else {
-                oracleInfo[0][JDBC] = String.format("jdbc:oracle:thin:@%s:%s:%s", oracleInfo[0][HOST], oracleInfo[0][PORT], oracleInfo[0][NAME]);
+                oracleInfo[0][JDBC] = String.format("jdbc:oracle:thin:@//%s:%s/%s", oracleInfo[0][HOST], oracleInfo[0][PORT], oracleInfo[0][NAME]);
             }
         }
 
@@ -164,7 +171,7 @@ public class PendingBannerReleases {
                 System.exit(1);
             }
             else {
-                oracleInfo[1][JDBC] = String.format("jdbc:oracle:thin:@%s:%s:%s", oracleInfo[1][HOST], oracleInfo[1][PORT], oracleInfo[1][NAME]);
+                oracleInfo[1][JDBC] = String.format("jdbc:oracle:thin:@//%s:%s/%s", oracleInfo[1][HOST], oracleInfo[1][PORT], oracleInfo[1][NAME]);
             }
         }
 
@@ -180,7 +187,7 @@ public class PendingBannerReleases {
                 System.exit(1);
             }
             else {
-                oracleInfo[2][JDBC] = String.format("jdbc:oracle:thin:@%s:%s:%s", oracleInfo[2][HOST], oracleInfo[2][PORT], oracleInfo[2][NAME]);
+                oracleInfo[2][JDBC] = String.format("jdbc:oracle:thin:@//%s:%s/%s", oracleInfo[2][HOST], oracleInfo[2][PORT], oracleInfo[2][NAME]);
             }
         }
 
@@ -218,11 +225,11 @@ public class PendingBannerReleases {
             System.exit(1);
         }
 
-        // Establish a connection to the Oracle (Banner) database
+        // Establish a connection to each Oracle (Banner) database
         DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
 
         for( int x = 0; x < 3; x++ ) {
-            if( oracleInfo[x][NAME] != null && oracleInfo[x][NAME].length() > 0 ) {
+            if( oracleInfo[x][JDBC] != null ) {
                 try {
                     oracleConnections[x] = DriverManager.getConnection(oracleInfo[x][JDBC], oracleInfo[x][USER], oracleInfo[x][PASS]);
                     System.out.println("* Connected to " + oracleInfo[x][NAME] + " as " + oracleInfo[x][USER]);
@@ -233,10 +240,18 @@ public class PendingBannerReleases {
                     h2Connection.close();
                     System.exit(1);
                 }
-                catch( SQLException se ) {
-                    System.out.println( "ERROR: Failed to connect to " + oracleInfo[x][NAME] + ". Please check the connection details and try again." );
-                    h2Connection.close();
-                    System.exit(1);
+                catch( SQLException se1 ) {
+                    try {
+                        oracleInfo[x][JDBC] = String.format("jdbc:oracle:thin:@%s:%s:%s", oracleInfo[x][HOST], oracleInfo[x][PORT], oracleInfo[x][NAME]);
+                        oracleConnections[x] = DriverManager.getConnection(oracleInfo[x][JDBC], oracleInfo[x][USER], oracleInfo[x][PASS]);
+                        System.out.println("* Connected to " + oracleInfo[x][NAME] + " as " + oracleInfo[x][USER]);
+                        oracleInfo[x][PASS] = new String();
+                    }
+                    catch( SQLException se2 ) {
+                        System.out.println( "ERROR: Failed to connect to " + oracleInfo[x][NAME] + ". Please check the connection details and try again." );
+                        h2Connection.close();
+                        System.exit(1);
+                    }
                 }
             }
         }
