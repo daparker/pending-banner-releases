@@ -69,8 +69,8 @@ Where `<path>` is the full path to the ESM webapp's lib directory (e.g., `/u01/a
 
 ## Change Log
 **Version 1.4.0** - January 24, 2023
-* Changed the default Oracle JDBC connection string to the format supported by pluggable databases RAC.
-* If the first connection attempt to an Oracle database fails, retry with the old JDBC connection string format.
+* Changed the default Oracle JDBC connection string to the Service Name format used by pluggable databases and RAC.
+* If the first connection attempt to an Oracle database fails, retry with the old SID format.
 
 **Version 1.3.0** - December 23, 2021
 * Added checks for missing config values for Oracle databases.
